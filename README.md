@@ -45,7 +45,7 @@ While fixing the Terraform CLI gpg depreciation issues, we noticed the bash scri
 - This will allow us an easier time to debug and execute manually Terraform CLI install
 - This will allow better portability for other projects that need to install Terraform CLI.
 
-### Shebang:
+### Shebang
 A shebang (pronounced Sha-bang) tells the bash interpreter what program will interpret the script.
 Write a shebang `#!/usr/bin/env bash` at the top of a file to make it bash executable, and to make it portable in different OS distributions. It will search the User's PATH for the bash executable.
 
@@ -70,4 +70,49 @@ chmod 744 ./bin/install_terraform_cli
 
 ### GitHub lifecycle (Before, Init, Command)
 We need to be careful while using the Init because it will not rerun if we restart an existing workspace.  
+When using git init in an existing workspace or directory, it initializes a new Git repository if one doesn't already exist. However, if a Git repository has been previously initialized in that directory, running git init again won't re-run the initialization process. Instead, it will have no effect and won't alter the existing repository. So, it's important to be cautious and use git init only when you intend to create a new Git repository or reinitialize a directory.
+
+In the GitHub repository lifecycle, "before" refers to the preparation stage before creating a repository. "Init" involves initializing a new Git repository in a local directory using git init.
+Once initialized, you can use various Git commands, such as git add, git commit, and git push, to manage and collaborate on your project, which are essential for version control and collaboration on GitHub. Information on Workspace Lifecycle
+
 [Gitpod workspace tasks](https://www.gitpod.io/docs/configure/workspaces/tasks)
+
+## Working with Environment Variables
+
+### env command
+We can list out all Enviroment Variables (Env Vars) using the `env` command. Environment variables, or env vars, are a way to configure software and store important information. They're like labels with values, used to customise programs. Env Vars are handy because they allow to change software settings without editing code. They consist of a name and a value, helping programs adapt to different environments.
+We can filter specific env vars using 'grep' command after a pipe, for eg. `env | grep GITPOD`.
+
+### Setting and Unsetting Environment Variables
+
+In bash, we can set the value of an env variable using export, eg. `export HELLO='world`. We can also unset the value of an environment variable using unset, eg. `unset HELLO`.
+We can set an env var temporarily before running a file.
+```sh
+HELLO='world' ./bin/print_message
+```
+Within a bash script, we can set an env var without writing export eg.
+```sh
+#!/usr/bin/env bash
+HELLO='world'
+echo $HELLO
+```
+
+### Printing Variables
+We can print an env var using echo eg. `echo $HELLO`
+
+### Scoping of Env Vars
+When you open up new bash terminals in VSCode it will not be aware of env vars that you have set in an another window.
+
+If you want Env Vars to persist across all future bash terminals that are open you need to set env vars in your bash profile. eg. `.bash_profile`. Setting environment variables at the global scope typically involves defining them in a way that they are accessible to all processes and applications running on a system. It can change based on operating systems, but for Linux/Unix(bash) we can set env vars by adding them to a system-wide configuration file like /etc/environment or by creating custom files in the /etc/profile.d/ directory
+
+When you open up new bash terminals in VSCode it won't be aware of env vars that've been set in another window. Environment variables set in one terminal session are typically not automatically available in other terminal sessions.
+To persist environment variables across future Bash terminals in a way that they are available every time you open a new terminal session, you should add them to your Bash profile configuration files
+
+### Persisting Env Vars in Gitpod
+We can persist env vars into gitpod by storing them in Gitpod Secrets Storage.
+```sh
+gp env HELLO='world'
+```
+All future workspaces launched will set the env vars for all bash terminals opened in those workspaces.
+You can also set en vars in the `.gitpod.yml` but this can only contain non-senstive env vars.
+
